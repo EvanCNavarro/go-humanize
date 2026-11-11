@@ -1,0 +1,11 @@
+grade:
+  guards:
+    # Proposed by ChangeFabric from this repo's CI (#1868): .github/workflows/go.yml › build
+    - when: "**"
+      run: go build -v ./... && go test -v ./...
+launch:
+  # Proposed by ChangeFabric from this repo's CI: the deploy jobs a merged change waits for before ChangeFabric closes
+  # its ticket. Each entry is a deploy job's check-run name and the paths whose change needs it. From: .github/workflows/coverage.yml › coverage
+  deploy:
+    - check: coverage
+      when: "**"
