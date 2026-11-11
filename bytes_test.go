@@ -175,6 +175,23 @@ func TestBytes(t *testing.T) {
 	}.validate(t)
 }
 
+func TestBytesLong(t *testing.T) {
+	testList{
+		{"BytesLong(0)", BytesLong(0), "0 bytes"},
+		{"BytesLong(1)", BytesLong(1), "1 byte"},
+		{"BytesLong(82854982)", BytesLong(82854982), "83 megabytes"},
+	}.validate(t)
+}
+
+func TestIBytesLong(t *testing.T) {
+	testList{
+		{"IBytesLong(0)", IBytesLong(0), "0 bytes"},
+		{"IBytesLong(1)", IBytesLong(1), "1 byte"},
+		{"IBytesLong(82854982)", IBytesLong(82854982), "79 mebibytes"},
+		{"IBytesLong(1024)", IBytesLong(1024), "1.0 kibibytes"},
+	}.validate(t)
+}
+
 func BenchmarkParseBytes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		ParseBytes("16.5 GB")
