@@ -77,7 +77,11 @@ func countDigits(n int64) int {
 
 func humanateBytes(s uint64, base float64, minDigits int, sizes []string) string {
 	if s < 10 {
-		return fmt.Sprintf("%d B", s)
+		suffix := sizes[0]
+		if s == 1 && strings.HasSuffix(suffix, "s") {
+			suffix = suffix[:len(suffix)-1]
+		}
+		return fmt.Sprintf("%d %s", s, suffix)
 	}
 	e := math.Floor(logn(float64(s), base))
 	val := float64(s) / math.Pow(base, e)
@@ -158,6 +162,28 @@ func IBytes(s uint64) string {
 func IBytesN(s uint64, n int) string {
 	sizes := []string{"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
 	return humanateBytes(s, 1024, n, sizes)
+}
+
+// BytesLong produces a human-readable representation of an SI size using
+// long unit names (e.g. "megabytes") instead of short symbols (e.g. "MB").
+//
+// See also: Bytes.
+//
+// BytesLong(82854982) -> 83 megabytes
+func BytesLong(s uint64) string {
+	sizes := []string{"bytes", "kilobytes", "megabytes", "gigabytes", "terabytes", "petabytes", "exabytes"}
+	return humanateBytes(s, 1000, 2, sizes)
+}
+
+// IBytesLong produces a human-readable representation of an IEC size using
+// long unit names (e.g. "mebibytes") instead of short symbols (e.g. "MiB").
+//
+// See also: IBytes.
+//
+// IBytesLong(82854982) -> 79 mebibytes
+func IBytesLong(s uint64) string {
+	sizes := []string{"bytes", "kibibytes", "mebibytes", "gibibytes", "tebibytes", "pebibytes", "exbibytes"}
+	return humanateBytes(s, 1024, 2, sizes)
 }
 
 // ParseBytes parses a string representation of bytes into the number
